@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Support Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Support Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for interactive graphs -->
 </head>
 <body>
-    <header>
-        <h1>Customer Support Dashboard</h1>
-    </header>
 
-    <section class="dashboard">
-        <div class="stat">
-            <h2>Average Response Time</h2>
-            <p id="response-time">Loading...</p>
-        </div>
-        <div class="stat">
-            <h2>Customer Satisfaction</h2>
-            <canvas id="satisfaction-chart"></canvas>
-        </div>
-        <div class="stat">
-            <h2>Tickets Handled per Agent</h2>
-            <canvas id="tickets-chart"></canvas>
-        </div>
-    </section>
+  <div class="dashboard-header">
+    <h1>Customer Support Dashboard</h1>
+  </div>
 
-    <script src="script.js"></script>
+  <div class="dashboard-cards">
+    <div class="card">
+      <h2>Average Response Time</h2>
+      <p>8.82 mins</p>
+    </div>
+
+    <div class="card">
+      <h2>Customer Satisfaction</h2>
+      <p>85%</p>
+    </div>
+
+    <div class="card">
+      <h2>Tickets Handled per Agent</h2>
+      <canvas id="ticketsChart"></canvas>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
-
