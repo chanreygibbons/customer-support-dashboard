@@ -1,39 +1,35 @@
-// Simulate average response time
-document.getElementById('response-time').innerText = (Math.random() * 10 + 5).toFixed(2) + ' mins';
+// Get the canvas element
+const ctx = document.getElementById('ticketsChart').getContext('2d');
 
-// Generate mock data for charts
-const ticketData = [15, 20, 12, 18, 25];
-const satisfactionData = [80, 90, 85, 70, 75];
+// Dummy data for tickets handled per agent
+const data = {
+  labels: ['Agent 1', 'Agent 2', 'Agent 3'],
+  datasets: [{
+    label: 'Tickets Handled',
+    data: [25, 40, 32],
+    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+    borderColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+    borderWidth: 1
+  }]
+};
 
-// Chart.js for satisfaction and tickets handled
-const ctx1 = document.getElementById('satisfaction-chart').getContext('2d');
-const ctx2 = document.getElementById('tickets-chart').getContext('2d');
-
-new Chart(ctx1, {
-    type: 'bar',
-    data: {
-        labels: ['Agent A', 'Agent B', 'Agent C', 'Agent D', 'Agent E'],
-        datasets: [{
-            label: 'Customer Satisfaction (%)',
-            data: satisfactionData,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
+// Chart configuration
+const config = {
+  type: 'bar',
+  data: data,
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    },
+    plugins: {
+      legend: {
+        display: false
+      }
     }
-});
+  }
+};
 
-new Chart(ctx2, {
-    type: 'line',
-    data: {
-        labels: ['Agent A', 'Agent B', 'Agent C', 'Agent D', 'Agent E'],
-        datasets: [{
-            label: 'Tickets Handled',
-            data: ticketData,
-            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-            borderColor: 'rgba(153, 102, 255, 1)',
-            borderWidth: 1
-        }]
-    }
-});
-
+// Render the chart
+new Chart(ctx, config);
