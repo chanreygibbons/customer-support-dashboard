@@ -1,35 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Support Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for interactive graphs -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-header h1 {
+            color: #1a1a1a;
+            font-size: 24px;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .metric {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .trend {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .trend.up {
+            color: #27ae60;
+        }
+
+        .trend.down {
+            color: #c0392b;
+        }
+    </style>
 </head>
 <body>
-
-  <div class="dashboard-header">
-    <h1>Customer Support Dashboard</h1>
-  </div>
-
-  <div class="dashboard-cards">
-    <div class="card">
-      <h2>Average Response Time</h2>
-      <p>8.82 mins</p>
+    <div class="dashboard-header">
+        <h1>Customer Support Dashboard</h1>
+    </div>
+    <div class="dashboard-cards">
+        <div class="card">
+            <h2>Average Response Time</h2>
+            <div id="responseTime" class="metric">0.0 mins</div>
+            <div id="responseTrend" class="trend"></div>
+        </div>
+        <div class="card">
+            <h2>Customer Satisfaction</h2>
+            <div id="satisfaction" class="metric">0%</div>
+            <div id="satisfactionTrend" class="trend"></div>
+        </div>
+        <div class="card">
+            <h2>Tickets Per Agent</h2>
+            <canvas id="ticketsChart"></canvas>
+        </div>
     </div>
 
-    <div class="card">
-      <h2>Customer Satisfaction</h2>
-      <p>85%</p>
-    </div>
+    <script>
+        // Initialize chart
+        const ctx = document.getElementById('ticketsChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['John', 'Sarah', 'Mike', 'Emma', 'David'],
+                datasets: [{
+                    label: 'Tickets Handled',
+                    data: [0, 0, 0, 0, 0],
+                    backgroundColor: '#3498db'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
-    <div class="card">
-      <h2>Tickets Handled per Agent</h2>
-      <canvas id="ticketsChart"></canvas>
-    </div>
-  </div>
+        // Function to generate random data
+        function generateData() {
+            return {
+                responseTime: (Math.random() * 15 + 5).toFixed(2),
+                satisfaction: Math.floor(Math.random() * 30 + 70),
+                ticketsPerAgent: Array.from({length: 5}, () => Math.floor(Math.random() * 20 + 10))
+            };
+        }
 
-  <script src="script.js"></script>
+        // Function to update dashboard
+        function updateDashboard() {
+            const newData = generateData();
+            
+            // Update response time
+            const responseTimeEl = document.getElementById('responseTime');
+            const oldResponseTime = parseFloat(responseTimeEl.textContent);
+            responseTimeEl.textContent = `${newData.responseTime} mins`;
+            
+            // Update response trend
+            const responseTrendEl = document.getElementById('responseTrend');
+            const responseDiff = newData.responseTime - oldResponseTime;
+            responseTrendEl.textContent = `${Math.abs(responseDiff).toFixed(2)}mins ${responseDiff < 0 ? '↓' : '↑'}`;
+            responseTrendEl.className = `trend ${responseDiff < 0 ? 'up' : 'down'}`;
+
+            // Update satisfaction
+            const satisfactionEl = document.getElementById('satisfaction');
+            const oldSatisfaction = parseInt(satisfactionEl.textContent);
+            satisfactionEl.textContent = `${newData.satisfaction}%`;
+            
+            // Update satisfaction trend
+            const satisfactionTrendEl = document.getElementById('satisfactionTrend');
+            const satisfactionDiff = newData.satisfaction - oldSatisfaction;
+            satisfactionTrendEl.textContent = `${Math.abs(satisfactionDiff)}% ${satisfactionDiff > 0 ? '↑' : '↓'}`;
+            satisfactionTrendEl.className = `trend ${satisfactionDiff > 0 ? 'up' : 'down'}`;
+
+            // Update chart
+            chart.data.datasets[0].data = newData.ticketsPerAgent;
+            chart.update();
+        }
+
+        // Initial update
+        updateDashboard();
+
+        // Update every 3 seconds
+        setInterval(updateDashboard, 3000);
+    </script>
 </body>
 </html>
